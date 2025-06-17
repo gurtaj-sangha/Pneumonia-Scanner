@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pneumonia Scanner</title>
+  <link rel="stylesheet" href="static/css/style.css" />
+</head>
+
+<body>
+  <main class="card">
+    <h1>Pneumonia Scanner</h1>
+
+    <label class="file-box">
+      <input type="file" id="xrayInput" accept=".bmp,.png,.jpg,.jpeg" />
+      <span>Select X-ray Image</span>
+    </label>
+
+    <button id="scanBtn">Scan Image</button>
+
+    <section id="results" class="grid">
+      <figure>
+        <img id="resultImg" alt="Uploaded X-ray" />
+        <figcaption>Original</figcaption>
+      </figure>
+
+      <figure>
+        <img id="heatImg" alt="Grad-CAM" />
+        <figcaption>Heat-map</figcaption>
+      </figure>
+
+      <div id="probBox" class="probs"></div>
+    </section>
+  </main>
+
+  <script src="static/js/script.js"></script>
+</body>
+</html>

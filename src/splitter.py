@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-# Define the root data directory and splits
 ROOT = Path("data")
 SPLITS = ["train", "val", "test"]
 
@@ -17,14 +16,14 @@ def split_pneumonia_images():
     
     for split in SPLITS:
         
-        # Path to the original viral_pneumonia folder
+        
         source_folder = ROOT / split / "viral_pneumonia"
         
         if not source_folder.exists():
             print(f"  Skipping {split} - viral_pneumonia folder not found")
             continue
         
-        # Create destination folders
+        
         bacterial_folder = ROOT / split / "bacterial_pneumonia"
         viral_folder = ROOT / split / "viral_pneumonia_new"
         
@@ -35,19 +34,19 @@ def split_pneumonia_images():
         viral_count = 0
         unknown_count = 0
         
-        # Process all image files in the source folder
+        
         for file_path in source_folder.glob("*"):
             if file_path.is_file() and file_path.suffix.lower() in ['.jpeg', '.jpg', '.png']:
                 filename = file_path.name.lower()
                 
                 if "_bacteria_" in filename:
-                    # Move to bacterial pneumonia folder
+                    
                     dest_path = bacterial_folder / file_path.name
                     file_path.rename(dest_path)
                     bacterial_count += 1
                     
                 elif "_virus_" in filename:
-                    # Move to viral pneumonia folder
+                   
                     dest_path = viral_folder / file_path.name
                     file_path.rename(dest_path)
                     viral_count += 1
@@ -64,7 +63,7 @@ def split_pneumonia_images():
         total_bacterial += bacterial_count
         total_viral += viral_count
         
-        # Remove the original viral_pneumonia folder if it's empty
+       
         try:
             if source_folder.exists() and not any(source_folder.iterdir()):
                 source_folder.rmdir()
@@ -72,7 +71,7 @@ def split_pneumonia_images():
         except OSError:
             print(f"  Could not remove folder {source_folder} (not empty)")
         
-        # Rename the new viral folder to replace the old one
+        
         if viral_folder.exists():
             final_viral_folder = ROOT / split / "viral_pneumonia"
             if not final_viral_folder.exists():

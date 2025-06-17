@@ -1,9 +1,34 @@
 import tensorflow as tf
+from tensorflow.python import keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 from config import DATA_DIR
+
+def preprocess_image(img_array, target_size=(224, 224)):
+    """
+    Preprocess a single image for model prediction.
+    """
+    
+    if isinstance(img_array, (str, Path)):
+        img = tf.keras.preprocessing.image.load_img(img_array, target_size=target_size)
+        img_array = tf.keras.preprocessing.image.img_to_array(img)
+    
+    
+    if img_array.ndim == 2:
+        img_array = np.stack((img_array,) * 3, axis=-1)
+    elif img_array.shape[-1] == 1:
+        img_array = np.concatenate([img_array] * 3, axis=-1)
+    
+    
+    img_array = img_array / 255.0
+    
+   
+    if img_array.ndim == 3:
+        img_array = np.expand_dims(img_array, axis=0)
+    
+    return img_array
 
 class PneumoniaDataPipeline:
     """
@@ -34,22 +59,22 @@ class PneumoniaDataPipeline:
         preprocessing and augmentation.
         """
         
-        # Training data augmentation for better generalization
+       
         train_datagen = ImageDataGenerator(
-            rescale=1./255,  # Normalize pixel values to [0,1]
-            rotation_range=15,  # Random rotation up to 15 degrees
-            width_shift_range=0.1,  # Random horizontal shift
-            height_shift_range=0.1,  # Random vertical shift
-            horizontal_flip=True,  # Random horizontal flip
-            zoom_range=0.1,  # Random zoom
-            brightness_range=[0.8, 1.2],  # Random brightness adjustment
-            fill_mode='nearest'  # Fill strategy for transformations
+            rescale=1./255,  
+            rotation_range=15,  
+            width_shift_range=0.1,  
+            height_shift_range=0.1,  
+            horizontal_flip=True,  
+            zoom_range=0.1, 
+            brightness_range=[0.8, 1.2],  
+            fill_mode='nearest'  
         )
         
-        # Validation and test data (no augmentation, only normalization)
+        
         val_test_datagen = ImageDataGenerator(rescale=1./255)
         
-        # Create generators
+       
         print("Creating data generators...")
         
         train_generator = train_datagen.flow_from_directory(
@@ -98,14 +123,14 @@ class PneumoniaDataPipeline:
         
         print("Calculating class weights...")
         
-        # Count samples per class in training set
+   
         class_counts = {}
         train_dir = self.data_dir / "train"
         
         for class_name in self.classes:
             class_dir = train_dir / class_name
             if class_dir.exists():
-                # Count all image files
+                
                 count = (len(list(class_dir.glob("*.jpeg"))) + 
                         len(list(class_dir.glob("*.jpg"))) + 
                         len(list(class_dir.glob("*.png"))))
@@ -119,13 +144,13 @@ class PneumoniaDataPipeline:
             percentage = (count / total_samples) * 100 if total_samples > 0 else 0
             print(f"  {class_name}: {count} samples ({percentage:.1f}%)")
         
-        # Calculate balanced class weights
+       
         class_weights = {}
         n_classes = len(self.classes)
         
         for i, class_name in enumerate(self.classes):
             if class_counts[class_name] > 0:
-                # Inverse frequency weighting
+            
                 class_weights[i] = total_samples / (n_classes * class_counts[class_name])
             else:
                 class_weights[i] = 1.0
@@ -199,7 +224,7 @@ class PneumoniaDataPipeline:
             class_dir = self.data_dir / "train" / class_name
             
             if class_dir.exists():
-                # Get first few images from this class
+                
                 image_files = list(class_dir.glob("*.jpeg")) + list(class_dir.glob("*.jpg"))
                 
                 for j in range(min(3, len(image_files))):
@@ -242,12 +267,12 @@ class PneumoniaDataPipeline:
             print("No sample image found for augmentation preview")
             return
         
-        # Load and prepare image
+     
         img = tf.keras.preprocessing.image.load_img(sample_image, target_size=self.img_size)
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
         
-        # Create augmentation generator
+       
         datagen = ImageDataGenerator(
             rescale=1./255,
             rotation_range=15,
@@ -259,16 +284,16 @@ class PneumoniaDataPipeline:
             fill_mode='nearest'
         )
         
-        # Generate augmented images
+        
         fig, axes = plt.subplots(1, num_augmentations + 1, figsize=(15, 3))
         fig.suptitle('Data Augmentation Preview', fontsize=16)
         
-        # Original image
+        
         axes[0].imshow(img_array[0] / 255.0)
         axes[0].set_title('Original')
         axes[0].axis('off')
         
-        # Augmented images
+     
         aug_iter = datagen.flow(img_array, batch_size=1)
         for i in range(num_augmentations):
             aug_img = next(aug_iter)
@@ -289,22 +314,22 @@ def main():
     print("Testing Pneumonia Data Pipeline")
     print("="*50)
     
-    # Initialize pipeline
+    
     pipeline = PneumoniaDataPipeline(batch_size=16)
     
-    # Get dataset statistics
+    
     pipeline.get_dataset_statistics()
     
-    # Calculate class weights
+   
     class_weights = pipeline.calculate_class_weights()
     
-    # Create data generators
+    
     train_gen, val_gen, test_gen = pipeline.create_data_generators()
     
-    # Visualize samples
+   
     pipeline.visualize_samples()
     
-    # Preview augmentations
+    
     pipeline.preview_augmentations()
     
     print("\nData pipeline setup complete!")
