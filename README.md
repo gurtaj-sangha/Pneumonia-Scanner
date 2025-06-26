@@ -10,7 +10,7 @@ A web-based pneumonia classification tool that analyzes chest X-ray images and p
 - **Visualization**: Generates sample images and dataset statistics
 - **Extensible**: Ready for model training and web interface integration
 
-**Model Building**: Created  ResNet50-based classification model
+**Model Building**: Created a ResNet50-based classification model
 **Training Pipeline**: Implemented training with proper validation
 **Web Interface**: Create Flask/FastAPI backend and HTML frontend
 
