@@ -2,6 +2,18 @@
 
 A web-based pneumonia classification tool that analyzes chest X-ray images and provides real-time diagnostic predictions using deep learning.
 
+## Features
+
+- **Data Organization**: Automatically splits pneumonia images by type (bacterial/viral)
+- **Preprocessing Pipeline**: Handles image loading, normalization, and augmentation
+- **Class Balance**: Calculates class weights for imbalanced datasets
+- **Visualization**: Generates sample images and dataset statistics
+- **Extensible**: Ready for model training and web interface integration
+
+**Model Building**: Created  ResNet50-based classification model
+**Training Pipeline**: Implemented training with proper validation
+**Web Interface**: Create Flask/FastAPI backend and HTML frontend
+
 ## Quick Start
 
 ### 1. Install Dependencies
@@ -67,18 +79,7 @@ pneumonia-scanner/
 └── README.md                    # This file
 ```
 
-## Features
 
-- **Data Organization**: Automatically splits pneumonia images by type (bacterial/viral)
-- **Preprocessing Pipeline**: Handles image loading, normalization, and augmentation
-- **Class Balance**: Calculates class weights for imbalanced datasets
-- **Visualization**: Generates sample images and dataset statistics
-- **Extensible**: Ready for model training and web interface integration
-
-
-**Model Building**: Created  ResNet50-based classification model
-**Training Pipeline**: Implemented training with proper validation
-**Web Interface**: Create Flask/FastAPI backend and HTML frontend
 
 ## Credits
 
