@@ -75,12 +75,10 @@ pneumonia-scanner/
 - **Visualization**: Generates sample images and dataset statistics
 - **Extensible**: Ready for model training and web interface integration
 
-## Next Steps
 
-1. **Model Building**: Create ResNet-based classification model
-2. **Training Pipeline**: Implement training with proper validation
-3. **Inference Engine**: Build prediction pipeline with Grad-CAM
-4. **Web Interface**: Create Flask/FastAPI backend and HTML frontend
+**Model Building**: Created  ResNet50-based classification model
+**Training Pipeline**: Implemented training with proper validation
+**Web Interface**: Create Flask/FastAPI backend and HTML frontend
 
 ## Credits
 
